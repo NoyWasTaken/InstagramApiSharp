@@ -103,14 +103,27 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="title">Highlight title</param>
         /// <param name="cropWidth">Crop width It depends on the aspect ratio/size of device display and the aspect ratio of story uploaded. must be in a range of 0-1, i.e: 0.19545822</param>
         /// <param name="cropHeight">Crop height It depends on the aspect ratio/size of device display and the aspect ratio of story uploaded. must be in a range of 0-1, i.e: 0.8037307</param>
-        public async Task<IResult<InstaHighlightFeed>> CreateHighlightFeedAsync(string mediaId, string title, float cropWidth, float cropHeight)
+        public async Task<IResult<InstaHighlightFeed>> CreateHighlightFeedAsync(string mediaId, string title,
+            float cropWidth, float cropHeight)
+        {
+            return await CreateHighlightFeedAsync(title, cropWidth, cropHeight, mediaId);
+        }
+
+        /// <summary>
+        ///     Create new highlight
+        /// </summary>
+        /// <param name="title">Highlight title</param>
+        /// <param name="cropWidth">Crop width It depends on the aspect ratio/size of device display and the aspect ratio of story uploaded. must be in a range of 0-1, i.e: 0.19545822</param>
+        /// <param name="cropHeight">Crop height It depends on the aspect ratio/size of device display and the aspect ratio of story uploaded. must be in a range of 0-1, i.e: 0.8037307</param>
+        /// <param name="mediaId">List of stories to add to the highlight</param>
+        public async Task<IResult<InstaHighlightFeed>> CreateHighlightFeedAsync(string title, float cropWidth, float cropHeight, params string[] mediaId)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
             {
                 var cover = new JObject
                 {
-                    {"media_id", mediaId},
+                    {"media_id", mediaId[0]},
                     {"crop_rect", new JArray { 0.0, cropWidth, 1.0, cropHeight }.ToString(Formatting.None) }
                 }.ToString(Formatting.None);
                 var data = new JObject
@@ -121,7 +134,7 @@ namespace InstagramApiSharp.API.Processors
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"cover", cover},
                     {"title", title},
-                    {"media_ids", $"[{ExtensionHelper.EncodeList(new[] { mediaId })}]"}
+                    {"media_ids", $"[{ExtensionHelper.EncodeList(mediaId)}]"}
                 };
 
                 var instaUri = UriCreator.GetHighlightCreateUri();
@@ -418,6 +431,8 @@ namespace InstagramApiSharp.API.Processors
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
+
+                Console.WriteLine(json);
 
                 if (response.StatusCode != HttpStatusCode.OK) return Result.UnExpectedResponse<InstaHighlightSingleFeed>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaHighlightReelResponse>(json,
@@ -1831,6 +1846,7 @@ namespace InstagramApiSharp.API.Processors
                                 questionArr.Add(item.ConvertToJson());
 
                             data.Add("story_questions", questionArr.ToString(Formatting.None));
+                            data.Add("story_stickers_ids", "question_sticker_ma");
                         }
                     }
 
