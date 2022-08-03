@@ -431,9 +431,8 @@ namespace InstagramApiSharp.API.Processors
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
-
-                Console.WriteLine(json);
-
+                File.WriteAllText(@"C:\Users\noybu\Desktop\test\bla.txt", json);
+                
                 if (response.StatusCode != HttpStatusCode.OK) return Result.UnExpectedResponse<InstaHighlightSingleFeed>(response, json);
                 var obj = JsonConvert.DeserializeObject<InstaHighlightReelResponse>(json,
                     new InstaHighlightReelsListDataConverter());

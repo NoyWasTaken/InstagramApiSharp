@@ -22,6 +22,15 @@ namespace InstagramApiSharp.API.Processors
         /// <summary>
         ///     Create new highlight
         /// </summary>
+        /// <param name="title">Highlight title</param>
+        /// <param name="cropWidth">Crop width It depends on the aspect ratio/size of device display and the aspect ratio of story uploaded. must be in a range of 0-1, i.e: 0.19545822</param>
+        /// <param name="cropHeight">Crop height It depends on the aspect ratio/size of device display and the aspect ratio of story uploaded. must be in a range of 0-1, i.e: 0.8037307</param>
+        /// <param name="mediaId">Story media id</param>
+        Task<IResult<InstaHighlightFeed>> CreateHighlightFeedAsync(string title, float cropWidth, float cropHeight, params string[] mediaId);
+        
+        /// <summary>
+        ///     Create new highlight
+        /// </summary>
         /// <param name="mediaId">Story media id</param>
         /// <param name="title">Highlight title</param>
         /// <param name="cropWidth">Crop width It depends on the aspect ratio/size of device display and the aspect ratio of story uploaded. must be in a range of 0-1, i.e: 0.19545822</param>
