@@ -380,6 +380,7 @@ namespace InstagramApiSharp.API.Processors
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode != HttpStatusCode.OK)
                     return Result.UnExpectedResponse<InstaFullUserInfo>(response, json);
+                Console.WriteLine(json);
                 var fullUserInfoResponse = JsonConvert.DeserializeObject<InstaFullUserInfoResponse>(json);
                 var converter = ConvertersFabric.Instance.GetFullUserInfoConverter(fullUserInfoResponse);
                 return Result.Success(converter.Convert());

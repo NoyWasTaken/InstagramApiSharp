@@ -1028,6 +1028,10 @@ namespace InstagramApiSharp.API
                         }
                         return Result.Fail($"{loginFailReason.ErrorType} {loginFailReason.CheckpointUrl}", InstaLoginResult.CheckpointLoggedOut);
                     }
+
+                    if (loginFailReason.ErrorType == "ip_block")
+                        return Result.Fail("IP has been blocked", InstaLoginResult.IpBlocked);
+
                     return Result.UnExpectedResponse<InstaLoginResult>(response, json);
                 }
                 var loginInfo = JsonConvert.DeserializeObject<InstaLoginResponse>(json);

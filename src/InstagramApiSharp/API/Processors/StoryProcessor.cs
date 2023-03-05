@@ -134,7 +134,7 @@ namespace InstagramApiSharp.API.Processors
                     {"_uuid", _deviceInfo.DeviceGuid.ToString()},
                     {"cover", cover},
                     {"title", title},
-                    {"media_ids", $"[{ExtensionHelper.EncodeList(mediaId)}]"}
+                    {"media_ids", $"[{mediaId.EncodeList()}]"}
                 };
 
                 var instaUri = UriCreator.GetHighlightCreateUri();
